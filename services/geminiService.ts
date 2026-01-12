@@ -1,16 +1,22 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { RecommendationResponse } from "../types";
+import { RecommendationResponse, UserPreferences } from "../types";
 
-export const getMusicRecommendations = async (theme: string): Promise<RecommendationResponse> => {
+export const getMusicRecommendations = async (preferences: UserPreferences): Promise<RecommendationResponse> => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
   
-  const prompt = `Act as a professional music curator. The user wants music recommendations for their commute (subway or bus) based on the theme or genre: "${theme}". 
-  Provide exactly 7 song recommendations. 
-  Follow these strict rules:
-  1. Return exactly 5 Korean songs and 2 Foreign (International) songs.
-  2. For each song, provide the title, artist, a short reason why it fits the commute, and the category ('Korean' or 'Foreign').
-  3. Respond only in valid JSON format.`;
+  const prompt = `Act as an expert personalized music curator. Create a 7-song commute playlist based on this user profile:
+  - Favorite Genres: ${preferences.genres.join(', ')}
+  - Preferred Eras: ${preferences.eras.join(', ')}
+  - Commute Vibe: ${preferences.vibe}
+  - Additional Info: ${preferences.extraInfo}
+
+  Strict Requirements:
+  1. Total 7 songs.
+  2. Ratio: 5 Korean songs (K-Pop/Indie/etc.) and 2 Foreign/International songs.
+  3. Tailor the selections to the commute environment (subway/bus).
+  4. Provide a brief, personalized reason for each song choice based on their preferences.
+  5. Respond ONLY in valid JSON format.`;
 
   try {
     const response = await ai.models.generateContent({
@@ -45,7 +51,7 @@ export const getMusicRecommendations = async (theme: string): Promise<Recommenda
     
     return JSON.parse(text) as RecommendationResponse;
   } catch (error) {
-    console.error("Error fetching recommendations:", error);
+    console.error("Error fetching personalized recommendations:", error);
     throw error;
   }
 };

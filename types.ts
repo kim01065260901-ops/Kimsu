@@ -1,4 +1,11 @@
 
+export interface UserPreferences {
+  genres: string[];
+  eras: string[];
+  vibe: string;
+  extraInfo: string;
+}
+
 export interface Song {
   title: string;
   artist: string;
