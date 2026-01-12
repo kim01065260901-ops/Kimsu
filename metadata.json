@@ -1,0 +1,5 @@
+{
+  "name": "CommuteMelody - Daily Playlist",
+  "description": "A daily music recommendation service tailored for your commute. Get 7 curated tracks based on your mood or genre, with a mix of 70% Korean and 30% international hits.",
+  "requestFramePermissions": []
+}
